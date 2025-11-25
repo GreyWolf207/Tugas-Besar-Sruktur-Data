@@ -1,4 +1,4 @@
-# Tugas-Besar-Sruktur-Data
+# Tugas-Besar-Struktur-Data
 
 Kelompok Gibson Jazzmaster
 Anggota: - M Farhan Mappaewa
