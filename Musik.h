@@ -1,74 +1,95 @@
-// spotify.h
-#ifndef SPOTIFY_H
-#define SPOTIFY_H
+#ifndef Musik_H
+#define Musik_H
 
 #include <iostream>
 
 using namespace std;
 
-// Struktur untuk Lagu (Song)
+// Pointer Definitions
+typedef struct ElmSong* AdrSong;
+typedef struct ElmPlaylist* AdrPlaylist;
+typedef struct ElmUser* AdrUser;
+
 struct Song {
-    char title[100];
-    char artist[100];
-    char album[100];
-    char duration[10]; // Format mm:ss
-    Song* next;
+    string title, artist, album;
+    int duration;
 };
 
-// Struktur untuk Playlist
-struct Playlist {
-    char name[100];
-    Song* headSong; // Menunjuk ke lagu pertama dalam playlist
-    Playlist* next;
-};
-
-// Struktur untuk User
 struct User {
-    char username[50];
-    char password[50];
-    Playlist* headPlaylist; // Menunjuk ke playlist pertama user
-    User* next;
+    string username, password;
 };
 
-// Struktur Global untuk menyimpan pointer utama
-struct Application {
-    User* headUser;
-    Song* headGlobalSong; // Lagu master (dikelola Admin)
+struct Playlist {
+    string name;
 };
 
-// --- FUNGSI BANTUAN (UTILITIES) ---
-int myStrCmp(const char* s1, const char* s2);
-void myStrCpy(char* dest, const char* src);
-void myStrCat(char* dest, const char* src);
-int myStrLen(const char* s);
-void inputString(const char* prompt, char* variable, int maxLength);
+// Node Lagu (Grandchild / Global)
+struct ElmSong {
+    Song info;
+    AdrSong next;
+};
 
-// --- FUNGSI ADT ---
+// Node Playlist (Child)
+struct ElmPlaylist {
+    Playlist info;
+    AdrSong firstSong;
+    AdrPlaylist next;
+};
 
-// Manajemen Global
-void createApplication(Application &app);
+// Node User (Parent)
+struct ElmUser {
+    User info;
+    AdrPlaylist firstPlaylist;
+    AdrUser next;
+};
 
-// Manajemen Lagu (Master / Admin)
-void insertGlobalSong(Application &app, char* title, char* artist, char* album, char* duration);
-void deleteGlobalSong(Application &app, char* title);
-void editGlobalSong(Application &app, char* title);
-void showGlobalSongs(Application &app);
-Song* searchGlobalSong(Application &app, char* title);
+// List Definitions
+struct ListUser {
+    AdrUser first;
+};
+
+struct ListGlobalSong {
+    AdrSong first;
+};
+
+struct ListPlaylist {
+    AdrPlaylist first;
+};
+
+// Manajemen List
+void createListUser(ListUser &L);
+void createListSong(ListGlobalSong &L);
+
+// Mengecek Empty
+bool isEmptysong(ListGlobalSong L);
+bool isEmptyUser(ListUser);
+bool isEmptyPlaylist(ListPlaylist);
 
 // Manajemen User
-void createUser(Application &app, char* user, char* pass);
-User* loginUser(Application &app, char* user, char* pass);
-void deleteUser(Application &app, char* user);
+AdrUser allocateUser(string user, string pass);
+void insertLastUser(ListUser &L, AdrUser P);
+void deleteUser(ListUser &L, string username);
+AdrUser searchUser(ListUser L, string username);
+AdrUser loginUser(ListUser L, string username, string password);
+
+// Manajemen Lagu Global (Admin)
+AdrSong allocateSong(string title, string artist, string album, int dur);
+void insertLastSong(AdrSong &first, AdrSong P); // Digunakan untuk global & playlist
+void deleteSong(AdrSong &first, string title);
+AdrSong searchSong(AdrSong first, string title);
+void editSong(AdrSong P);
+void showSongs(AdrSong first);
 
 // Manajemen Playlist (User)
-void createPlaylist(User* user, char* name);
-void deletePlaylist(User* user, char* name);
-void editPlaylist(User* user, char* oldName, char* newName);
-Playlist* searchPlaylist(User* user, char* name);
-void showPlaylists(User* user);
+AdrPlaylist allocatePlaylist(string name);
+void insertLastPlaylist(AdrUser U, AdrPlaylist P);
+void deletePlaylist(AdrUser U, string playlistName);
+AdrPlaylist searchPlaylist(AdrUser U, string playlistName);
+void showPlaylists(AdrUser U);
+void editPlaylist(AdrPlaylist P, string newName);
 
-// Manajemen Lagu dalam Playlist
-void addSongToPlaylist(Playlist* playlist, Song* songData); // Mengcopy data dari global ke playlist
-void playPlaylist(Playlist* playlist);
+// Menambahkan lagu ke playlist
+void addSongToPlaylist(AdrPlaylist P, AdrSong GlobalSong);
+void playPlaylist(AdrPlaylist P);
 
 #endif
