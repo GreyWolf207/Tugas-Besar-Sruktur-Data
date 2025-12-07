@@ -1,49 +1,51 @@
-#ifndef Musik_H
-#define Musik_H
+#ifndef MUSIK_H
+#define MUSIK_H
 
 #include <iostream>
-
 using namespace std;
 
-// Pointer Definitions
+// ADDRESS
 typedef struct ElmSong* AdrSong;
 typedef struct ElmPlaylist* AdrPlaylist;
 typedef struct ElmUser* AdrUser;
 
-struct Song {
-    string title, artist, album;
-    int duration;
-};
 
-struct User {
-    string username, password;
+// DATA
+struct Song {
+    string title;
+    string artist;
+    string album;
+    int duration;
 };
 
 struct Playlist {
     string name;
 };
 
-// Node Lagu (Grandchild / Global)
+struct User {
+    string username;
+    string password;
+};
+
+// ELEMEN
 struct ElmSong {
     Song info;
     AdrSong next;
 };
 
-// Node Playlist (Child)
 struct ElmPlaylist {
     Playlist info;
     AdrSong firstSong;
     AdrPlaylist next;
 };
 
-// Node User (Parent)
 struct ElmUser {
     User info;
     AdrPlaylist firstPlaylist;
     AdrUser next;
 };
 
-// List Definitions
+// LIST
 struct ListUser {
     AdrUser first;
 };
@@ -52,44 +54,52 @@ struct ListGlobalSong {
     AdrSong first;
 };
 
-struct ListPlaylist {
-    AdrPlaylist first;
-};
-
-// Manajemen List
+// CREATE LIST
 void createListUser(ListUser &L);
-void createListSong(ListGlobalSong &L);
+void createListGlobalSong(ListGlobalSong &L);
 
-// Mengecek Empty
-bool isEmptysong(ListGlobalSong L);
-bool isEmptyUser(ListUser);
-bool isEmptyPlaylist(ListPlaylist);
+// ALLOCATE
+AdrUser allocateUser(const string &username, const string &password);
+AdrPlaylist allocatePlaylist(const string &name);
+AdrSong allocateSong(const string &title, const string &artist, const string &album, int duration);
 
-// Manajemen User
-AdrUser allocateUser(string user, string pass);
+// INSERT
 void insertLastUser(ListUser &L, AdrUser P);
-void deleteUser(ListUser &L, string username);
-AdrUser searchUser(ListUser L, string username);
-AdrUser loginUser(ListUser L, string username, string password);
-
-// Manajemen Lagu Global (Admin)
-AdrSong allocateSong(string title, string artist, string album, int dur);
-void insertLastSong(AdrSong &first, AdrSong P); // Digunakan untuk global & playlist
-void deleteSong(AdrSong &first, string title);
-AdrSong searchSong(AdrSong first, string title);
-void editSong(AdrSong P);
-void showSongs(AdrSong first);
-
-// Manajemen Playlist (User)
-AdrPlaylist allocatePlaylist(string name);
 void insertLastPlaylist(AdrUser U, AdrPlaylist P);
-void deletePlaylist(AdrUser U, string playlistName);
-AdrPlaylist searchPlaylist(AdrUser U, string playlistName);
-void showPlaylists(AdrUser U);
-void editPlaylist(AdrPlaylist P, string newName);
+void insertLastSong(AdrSong &first, AdrSong P);
+void insertLastGlobalSong(ListGlobalSong &L, AdrSong P);
 
-// Menambahkan lagu ke playlist
-void addSongToPlaylist(AdrPlaylist P, AdrSong GlobalSong);
+// LOGIN
+AdrUser loginUser(const ListUser &L, const string &username, const string &password);
+bool usernameExists(const ListUser &L, const string &username);
+
+// SEARCH
+AdrUser searchUser(const ListUser &L, const string &username);
+AdrPlaylist searchPlaylist(AdrUser U, const string &playlistName);
+AdrSong searchSong(AdrSong first, const string &title);
+AdrSong searchSongInGlobal(const ListGlobalSong &L, const string &title);
+
+// DTELETE
+void deleteUser(ListUser &L, const string &username);
+void deletePlaylist(AdrUser U, const string &playlistName);
+void deleteSongFromGlobal(ListGlobalSong &L, const string &title);
+void removeSongFromPlaylist(AdrPlaylist P, const string &songTitle);
+
+// ADD SONG
+void addSongToPlaylistFromGlobal(AdrPlaylist P, AdrSong GlobalSong);
+
+// EDIT
+void editSong(AdrSong P, const Song &newData);
+void editPlaylistName(AdrPlaylist P, const string &newName);
+
+// SHOW
+void showSongs(AdrSong first);
+void showPlaylists(AdrUser U);
+void showSongsInPlaylist(AdrPlaylist P);
 void playPlaylist(AdrPlaylist P);
+
+// HELPER
+int mmssToSeconds(const string &mmss);
+string secondsToMMSS(int seconds);
 
 #endif

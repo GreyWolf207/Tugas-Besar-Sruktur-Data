@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// --- IMPLEMENTASI LIST ---
+//CREATE LIST
 void createListUser(ListUser &L) {
     L.first = nullptr;
 }
@@ -12,184 +12,53 @@ void createListGlobalSong(ListGlobalSong &L) {
     L.first = nullptr;
 }
 
-// --- IMPLEMENTASI EMPTY ---
-bool isEmptysong(ListGlobalSong L) {
-    return L.first == nullptr;
-}
-
-bool isEmptyUser(ListUser) {
-    return L.first == nullptr;
-}
-
-bool isEmptyPlaylist(ListPlaylist) {
-    return L.first == nullptr;
-}
-
-// --- IMPLEMENTASI USER ---
-AdrUser allocateUser(string user, string pass) {
+// ALLOCATE
+AdrUser allocateUser(const string &username, const string &password) {
     AdrUser P = new ElmUser;
 
-    p->info.username = user;
-    p->iinfo.password = pass;
-
+    P->info.username = username;
+    P->info.password = password;
     P->firstPlaylist = nullptr;
     P->next = nullptr;
 
     return P;
 }
 
+AdrPlaylist allocatePlaylist(const string &name) {
+    AdrPlaylist P = new ElmPlaylist;
+
+    P->info.name = name;
+    P->firstSong = nullptr;
+    P->next = nullptr;
+
+    return P;
+}
+
+AdrSong allocateSong(const string &title, const string &artist, const string &album, int duration) {
+    AdrSong P = new ElmSong;
+
+    P->info.title = title;
+    P->info.artist = artist;
+    P->info.album = album;
+    P->info.duration = duration;
+    P->next = nullptr;
+
+    return P;
+}
+
+// INSERT
 void insertLastUser(ListUser &L, AdrUser P) {
     if (L.first == nullptr) {
         L.first = P;
     } else {
         AdrUser Q = L.first;
 
-        while (Q->next != nullptr) {
+        while (Q->next) {
             Q = Q->next;
         }
 
         Q->next = P;
     }
-}
-
-AdrUser searchUser(ListUser L, string username) {
-    AdrUser P = L.first;
-
-    while (P != nullptr) {
-        if (strCmp(P->info.username, username) == 0) return P;
-        P = P->next;
-    }
-
-    return nullptr;
-}
-
-AdrUser loginUser(ListUser L, string username, string password) {
-    AdrUser P = searchUser(L, username);
-
-    if (P != nullptr) {
-        if (strCmp(P->info.password, password) == 0) return P;
-    }
-
-    return nullptr;
-}
-
-void deleteUser(ListUser &L, string username) {
-    AdrUser P = L.first;
-    AdrUser Prev = nullptr;
-
-    while (P != nullptr && strCmp(P->info.username, username) != 0) {
-        Prev = P;
-        P = P->next;
-    }
-
-    if (P != nullptr) {
-        if (Prev == nullptr) {
-            L.first = P->next;
-        } else {
-            Prev->next = P->next;
-        }
-
-        delete P;
-        cout << ">> User berhasil dihapus.\n";
-    } else {
-        cout << ">> User tidak ditemukan.\n";
-    }
-}
-
-// --- IMPLEMENTASI LAGU (GLOBAL & PLAYLIST) ---
-AdrSong allocateSong(string title, string artist, string album, int duration) {
-    AdrSong P = new ElmSong;
-
-    p->info.title = title;
-    p->info.artists = artist;
-    p->info.album = album;
-    p->info.duration;
-
-    P->next = nullptr;
-
-    return P;
-}
-
-void insertLastSong(AdrSong &first, AdrSong P) {
-    if (first == nullptr) {
-        first = P;
-    } else {
-        AdrSong Q = first;
-
-        while (Q->next != nullptr) {
-            Q = Q->next;
-        }
-
-        Q->next = P;
-    }
-}
-
-void deleteSong(AdrSong &first, string title) {
-    AdrSong P = first;
-    AdrSong Prev = nullptr;
-
-    while (P != nullptr && strCmp(P->info.title, title) != 0) {
-        Prev = P;
-        P = P->next;
-    }
-
-    if (P != nullptr) {
-        if (Prev == nullptr) {
-            first = P->next;
-        } else {
-            Prev->next = P->next;
-        }
-
-        delete P;
-        cout << ">> Lagu dihapus.\n";
-    } else {
-        cout << ">> Lagu tidak ditemukan.\n";
-    }
-}
-
-AdrSong searchSong(AdrSong first, string title) {
-    AdrSong P = first;
-
-    while (P != nullptr) {
-        if (strCmp(P->info.title, title) == 0) return P;
-        P = P->next;
-    }
-
-    return nullptr;
-}
-
-void editSong(AdrSong P) {
-    if (P != nullptr) {
-        cout << "Edit Data Lagu:\n";
-
-        cout << ">> Data berhasil diubah.\n";
-    }
-}
-
-void showSongs(AdrSong first) {
-    if (first == nullptr) {
-        cout << "   (Tidak ada lagu)\n";
-    } else {
-        AdrSong P = first;
-        int i = 1;
-
-        while (P != nullptr) {
-            cout << "   " << i++ << ". " << P->info.title << " - " << P->info.artist
-                 << " (" << P->info.duration << ")\n";
-            P = P->next;
-        }
-    }
-}
-
-// --- IMPLEMENTASI PLAYLIST ---
-AdrPlaylist allocatePlaylist(string name) {
-    AdrPlaylist P = new ElmPlaylist;
-
-    p->info.name = name
-    P->firstSong = nullptr;
-    P->next = nullptr;
-
-    return P;
 }
 
 void insertLastPlaylist(AdrUser U, AdrPlaylist P) {
@@ -198,7 +67,7 @@ void insertLastPlaylist(AdrUser U, AdrPlaylist P) {
     } else {
         AdrPlaylist Q = U->firstPlaylist;
 
-        while (Q->next != nullptr) {
+        while (Q->next) {
             Q = Q->next;
         }
 
@@ -206,77 +75,224 @@ void insertLastPlaylist(AdrUser U, AdrPlaylist P) {
     }
 }
 
-void deletePlaylist(AdrUser U, string playlistName) {
-    AdrPlaylist P = U->firstPlaylist;
-    AdrPlaylist Prev = nullptrptr;
+void insertLastSong(AdrSong &first, AdrSong P) {
+    if (first == nullptr) {
+        first = P;
+    } else {
+        AdrSong Q = first;
 
-    while (P != nullptr && strCmp(P->info.name, playlistName) != 0) {
-        Prev = P;
-        P = P->next;
-    }
-
-    if (P != nullptr) {
-        if (Prev == nullptrptr) {
-            U->firstPlaylist = P->next;
-        } else {
-            Prev->next = P->next;
+        while (Q->next) {
+            Q = Q->next;
         }
 
-        delete P;
-        cout << ">> Playlist dihapus.\n";
-    } else {
-        cout << ">> Playlist tidak ditemukan.\n";
+        Q->next = P;
     }
 }
 
-AdrPlaylist searchPlaylist(AdrUser U, string playlistName) {
-    AdrPlaylist P = U->firstPlaylist;
+void insertLastGlobalSong(ListGlobalSong &L, AdrSong P) {
+    insertLastSong(L.first, P);
+}
 
-    while (P != nullptr) {
-        if (strCmp(P->info.name, playlistName) == 0) {
+// LOGIN
+AdrUser loginUser(const ListUser &L, const string &username, const string &password) {
+    AdrUser P = L.first;
+
+    while (P) {
+        if (P->info.username == username && P->info.password == password) {
             return P;
         }
 
         P = P->next;
     }
 
-    return nullptrptr;
+    return nullptr;
+}
+
+bool usernameExists(const ListUser &L, const string &username) {
+    return (searchUser(L, username) != nullptr);
+}
+
+// SEARCH
+AdrUser searchUser(const ListUser &L, const string &username) {
+    AdrUser P = L.first;
+
+    while (P) {
+        if (P->info.username == username) {
+            return P;
+        }
+
+        P = P->next;
+    }
+
+    return nullptr;
+}
+
+AdrPlaylist searchPlaylist(AdrUser U, const string &playlistName) {
+    AdrPlaylist P = U->firstPlaylist;
+
+    while (P) {
+        if (P->info.name == playlistName) {
+            return P;
+        }
+
+        P = P->next;
+    }
+
+    return nullptr;
+}
+
+AdrSong searchSong(AdrSong first, const string &title) {
+    AdrSong P = first;
+
+    while (P) {
+        if (P->info.title == title) {
+            return P;
+        }
+
+        P = P->next;
+    }
+
+    return nullptr;
+}
+
+AdrSong searchSongInGlobal(const ListGlobalSong &L, const string &title) {
+    return searchSong(L.first, title);
+}
+
+// DELETE
+void deleteUser(ListUser &L, const string &username) {
+    AdrUser P = L.first, Prev = nullptr;
+
+    while (P && P->info.username != username) {
+        Prev = P;
+        P = P->next;
+    }
+
+    if (!P) {
+        return;
+    }
+
+    if (Prev == nullptr) {
+        L.first = P->next;
+    } else {
+        Prev->next = P->next;
+    }
+}
+
+void deletePlaylist(AdrUser U, const string &playlistName) {
+    AdrPlaylist P = U->firstPlaylist, Prev = nullptr;
+
+    while (P && P->info.name != playlistName) {
+        Prev = P;
+        P = P->next;
+    }
+
+    if (!P) {
+        return;
+    }
+
+    if (Prev == nullptr) {
+        U->firstPlaylist = P->next;
+    } else {
+        Prev->next = P->next;
+    }
+}
+
+void deleteSongFromGlobal(ListGlobalSong &L, const string &title) {
+    AdrSong P = L.first, Prev = nullptr;
+
+    while (P && P->info.title != title) {
+        Prev = P;
+        P = P->next;
+    }
+
+    if (!P) {
+        return;
+    }
+
+    if (Prev == nullptr) {
+        L.first = P->next;
+    } else {
+        Prev->next = P->next;
+    }
+}
+
+void removeSongFromPlaylist(AdrPlaylist PL, const string &songTitle) {
+    AdrSong S = PL->firstSong, Prev = nullptr;
+
+    while (S && S->info.title != songTitle) {
+        Prev = S;
+        S = S->next;
+    }
+
+    if (!S) {
+        return;
+    }
+
+    if (Prev == nullptr) {
+        PL->firstSong = S->next;
+    } else {
+        Prev->next = S->next;
+    }
+}
+
+// ADD
+void addSongToPlaylistFromGlobal(AdrPlaylist P, AdrSong G) {
+    AdrSong copy = allocateSong(G->info.title, G->info.artist, G->info.album, G->info.duration);
+    insertLastSong(P->firstSong, copy);
+}
+
+// EDIT
+void editSong(AdrSong P, const Song &newData) {
+    if (P) {
+        P->info = newData;
+    }
+}
+
+void editPlaylistName(AdrPlaylist P, const string &newName) {
+    if (P) {
+        P->info.name = newName;
+    }
+}
+
+// SHOW
+void showSongs(AdrSong first) {
+    int i = 1;
+
+    while (first) {
+        cout << i++ << ". " << first->info.title << " - " << first->info.artist << " (" << secondsToMMSS(first->info.duration) << ")\n";
+        first = first->next;
+    }
 }
 
 void showPlaylists(AdrUser U) {
-    if (U->firstPlaylist == nullptr) {
-        cout << ">> Belum ada playlist.\n";
-    } else {
-        AdrPlaylist P = U->firstPlaylist;
-        int i = 1;
+    AdrPlaylist P = U->firstPlaylist;
 
-        while (P != nullptr) {
-            cout << i++ << ". " << P->info.name << "\n";
-            P = P->next;
-        }
+    while (P) {
+        cout << "- " << P->info.name << "\n";
+        P = P->next;
     }
 }
 
-void editPlaylist(AdrPlaylist P, string newName) {
-    if (P != nullptr) {
-
-        cout << ">> Nama playlist diubah.\n";
-    }
-}
-
-// Sesuai materi MLL Page 25: R.info = Q.info, insert(L3, R)
-void addSongToPlaylist(AdrPlaylist P, AdrSong GlobalSong) {
-    if (GlobalSong == nullptr) return;
-
-    // Alokasi node baru untuk playlist (Copy data dari master)
-    AdrSong NewSong = allocateSong(GlobalSong->info.title, GlobalSong->info.artist, GlobalSong->info.album, GlobalSong->info.duration);
-    insertLastSong(P->firstSong, NewSong);
-
-    cout << ">> Lagu berhasil ditambahkan ke playlist.\n";
+void showSongsInPlaylist(AdrPlaylist P) {
+    showSongs(P->firstSong);
 }
 
 void playPlaylist(AdrPlaylist P) {
-    cout << "\n=== NOW PLAYING: " << P->info.name << " ===\n";
+    cout << "\n=== PLAYLIST : " << P->info.name << " ===\n";
     showSongs(P->firstSong);
-    cout << "====================================\n";
+}
+
+// HELPER
+int mmssToSeconds(const string &mmss) {
+    int pos = mmss.find(':');
+    int m = stoi(mmss.substr(0, pos));
+    int s = stoi(mmss.substr(pos + 1));
+
+    return m * 60 + s;
+}
+
+string secondsToMMSS(int sec) {
+    int m = sec / 60, s = sec % 60;
+    return to_string(m) + ":" + (s < 10 ? "0" : "") + to_string(s);
 }
