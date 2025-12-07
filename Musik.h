@@ -1,68 +1,74 @@
-#ifndef MUSIK_H_INCLUDED
-#define MUSIK_H_INCLUDED
+// spotify.h
+#ifndef SPOTIFY_H
+#define SPOTIFY_H
 
 #include <iostream>
 
 using namespace std;
 
-typedef struct Lagu* adrLag;
-typedef struct User* adrUsr;
-typedef struct Playlist* adrPla;
-
-struct Lagu {
-    string judul, artis, album;
-    int durasi;
+// Struktur untuk Lagu (Song)
+struct Song {
+    char title[100];
+    char artist[100];
+    char album[100];
+    char duration[10]; // Format mm:ss
+    Song* next;
 };
 
-struct User {
-    int ID;
-    string username;
-};
-
+// Struktur untuk Playlist
 struct Playlist {
-    string namaPlaylist, namaUser;
-    int jumlahLagu;
+    char name[100];
+    Song* headSong; // Menunjuk ke lagu pertama dalam playlist
+    Playlist* next;
 };
 
-struct elmLag {
-    Lagu info;
-    adrLag next;
+// Struktur untuk User
+struct User {
+    char username[50];
+    char password[50];
+    Playlist* headPlaylist; // Menunjuk ke playlist pertama user
+    User* next;
 };
 
-struct elmUsr {
-    User info;
-    adrLag next;
+// Struktur Global untuk menyimpan pointer utama
+struct Application {
+    User* headUser;
+    Song* headGlobalSong; // Lagu master (dikelola Admin)
 };
 
-struct elmPla {
-    Playlist info;
-    adrPla next;
-};
+// --- FUNGSI BANTUAN (UTILITIES) ---
+int myStrCmp(const char* s1, const char* s2);
+void myStrCpy(char* dest, const char* src);
+void myStrCat(char* dest, const char* src);
+int myStrLen(const char* s);
+void inputString(const char* prompt, char* variable, int maxLength);
 
-struct ListLag {
-    adrLag first, last;
-};
+// --- FUNGSI ADT ---
 
-struct ListUsr {
-    adrUsr first, last;
-};
+// Manajemen Global
+void createApplication(Application &app);
 
-struct ListPla {
-    adrPla first, last;
-};
+// Manajemen Lagu (Master / Admin)
+void insertGlobalSong(Application &app, char* title, char* artist, char* album, char* duration);
+void deleteGlobalSong(Application &app, char* title);
+void editGlobalSong(Application &app, char* title);
+void showGlobalSongs(Application &app);
+Song* searchGlobalSong(Application &app, char* title);
 
-void createSongList(ListLag L);
-void createUserList(ListUsr U);
-void createPlaylistList(ListPla P);
+// Manajemen User
+void createUser(Application &app, char* user, char* pass);
+User* loginUser(Application &app, char* user, char* pass);
+void deleteUser(Application &app, char* user);
 
-adrLag allocateSong(Lagu L);
-adrUsr allocateUser(User U);
-adrPla allocatePlaylist(Playlist P);
+// Manajemen Playlist (User)
+void createPlaylist(User* user, char* name);
+void deletePlaylist(User* user, char* name);
+void editPlaylist(User* user, char* oldName, char* newName);
+Playlist* searchPlaylist(User* user, char* name);
+void showPlaylists(User* user);
 
-void printInfo();
+// Manajemen Lagu dalam Playlist
+void addSongToPlaylist(Playlist* playlist, Song* songData); // Mengcopy data dari global ke playlist
+void playPlaylist(Playlist* playlist);
 
-void insertSong();
-void editSong();
-void deleteSong();
-
-#endif // MUSIK_H_INCLUDED
+#endif
