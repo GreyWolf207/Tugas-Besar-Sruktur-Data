@@ -1,6 +1,5 @@
 #include "Musik.h"
 #include <iostream>
-
 using namespace std;
 
 int main() {
@@ -18,10 +17,11 @@ int main() {
 
         if (pilih == "1") {
             string u,p;
+            cout << "\n=== WELCOME ===\n";
             cout << "Username: "; getline(cin, u);
             cout << "Password: "; getline(cin, p);
 
-            if (u == "admin" && p == "admin") {
+            if (u == "admin" && p == "admin123") {
                 bool stopAdmin = false;
 
                 while (!stopAdmin) {
@@ -31,20 +31,21 @@ int main() {
 
                     if (pa == "1") {
                         string t,a,al,du;
-                        cout << "Judul: "; getline(cin, t);
-                        cout << "Artis: "; getline(cin, a);
-                        cout << "Album: "; getline(cin, al);
-                        cout << "Durasi (mm:ss): "; getline(cin, du);
 
-                        insertLastGlobalSong(
-                            songs,
-                            allocateSong(t, a, al, mmssToSeconds(du))
-                        );
+                        cout << "\n=== INSERT ===\n";
+                        cout << "Judul          : "; getline(cin, t);
+                        cout << "Artis          : "; getline(cin, a);
+                        cout << "Album          : "; getline(cin, al);
+                        cout << "Durasi (mm:ss) : "; getline(cin, du);
+
+                        insertLastGlobalSong(songs, allocateSong(t, a, al, mmssToSeconds(du)));
                     } else if (pa == "2") {
+                        cout << "\n=== DELETE ===\n";
                         cout << "Judul lagu: ";
                         string t; getline(cin, t);
                         deleteSongFromGlobal(songs, t);
                     } else if (pa == "3") {
+                        cout << "\n=== EDIT ===\n";
                         cout << "Judul lagu: ";
                         string t; getline(cin, t);
                         AdrSong S = searchSongInGlobal(songs, t);
@@ -54,10 +55,11 @@ int main() {
                         }
 
                         string nt,na,nal,nd;
-                        cout << "Judul baru: "; getline(cin, nt);
-                        cout << "Artis baru: "; getline(cin, na);
-                        cout << "Album baru: "; getline(cin, nal);
-                        cout << "Durasi baru: "; getline(cin, nd);
+                        cout << " " << endl;
+                        cout << "Judul baru  : "; getline(cin, nt);
+                        cout << "Artis baru  : "; getline(cin, na);
+                        cout << "Album baru  : "; getline(cin, nal);
+                        cout << "Durasi baru : "; getline(cin, nd);
 
                         Song baru;
                         baru.title = nt;
@@ -66,6 +68,7 @@ int main() {
                         baru.duration = mmssToSeconds(nd);
                         editSong(S, baru);
                     } else if (pa == "4") {
+                         cout << "\n=== SONG LIST ===\n";
                         showSongs(songs.first);
                     } else if (pa == "5") {
                         stopAdmin = true;
@@ -88,6 +91,7 @@ int main() {
                     string pu; getline(cin, pu);
 
                     if (pu == "1") {
+                         cout << "\n=== PLAY ===\n";
                         cout << "Judul lagu: ";
                         string t; getline(cin, t);
                         AdrSong S = searchSongInGlobal(songs, t);
@@ -98,6 +102,7 @@ int main() {
                             cout << "Now playing: " << S->info.title << endl;
                         }
                     } else if (pu == "2") {
+                         cout << "\n=== SEARCH ===\n";
                         cout << "Keyword: ";
                         string q; getline(cin, q);
                         AdrSong C = songs.first;
@@ -110,12 +115,15 @@ int main() {
                             C = C->next;
                         }
                     } else if (pu == "3") {
+                        cout << "\n=== CREATE ===\n";
                         cout << "Nama playlist: ";
                         string pn; getline(cin, pn);
                         insertLastPlaylist(U, allocatePlaylist(pn));
                     } else if (pu == "4") {
+                         cout << "\n=== LIST PLAYLIST ===\n";
                         showPlaylists(U);
                     } else if (pu == "5") {
+                         cout << "\n=== EDIT ===\n";
                         cout << "Nama playlist: ";
                         string pn; getline(cin, pn);
                         AdrPlaylist P = searchPlaylist(U, pn);
@@ -124,24 +132,29 @@ int main() {
                             continue;
                         }
 
+                        cout << "\n=== PLAYLIST MENU ===\n";
                         cout << "1. Add song\n2. Remove song\n3. Rename\nPilih: ";
                         string ep; getline(cin, ep);
 
                         if (ep == "1") {
+                            cout << "\n=== ADD ===\n";
                             cout << "Judul lagu: ";
                             string t; getline(cin, t);
                             AdrSong S = searchSongInGlobal(songs, t);
                             if (S) addSongToPlaylistFromGlobal(P, S);
                         } else if (ep == "2") {
+                            cout << "\n=== REMOVE ===\n";
                             cout << "Judul lagu: ";
                             string t; getline(cin, t);
                             removeSongFromPlaylist(P, t);
                         } else if (ep == "3") {
+                            cout << "\n=== RENAME ===\n";
                             cout << "Nama baru: ";
                             string n; getline(cin, n);
                             editPlaylistName(P, n);
                         }
                     } else if (pu == "6") {
+                        cout << "\n=== DELETE ===\n";
                         cout << "Nama playlist: ";
                         string pn; getline(cin, pn);
                         deletePlaylist(U, pn);
@@ -152,6 +165,8 @@ int main() {
             }
         } else if (pilih == "2") {
             string u,p;
+
+            cout << "\n=== CREATE  ===\n";
             cout << "Username baru: "; getline(cin, u);
             cout << "Password baru: "; getline(cin, p);
 
@@ -159,6 +174,7 @@ int main() {
                 insertLastUser(users, allocateUser(u,p));
             }
         } else if (pilih == "3") {
+            cout << "\n=== DELETE ===\n";
             cout << "Username: ";
             string u; getline(cin, u);
 
