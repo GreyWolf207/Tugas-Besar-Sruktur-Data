@@ -9,7 +9,6 @@ typedef struct ElmSong* AdrSong;
 typedef struct ElmPlaylist* AdrPlaylist;
 typedef struct ElmUser* AdrUser;
 
-
 // DATA
 struct Song {
     string title;
@@ -54,14 +53,14 @@ struct ListGlobalSong {
     AdrSong first;
 };
 
-// CREATE LIST
+// CREATE
 void createListUser(ListUser &L);
 void createListGlobalSong(ListGlobalSong &L);
 
 // ALLOCATE
-AdrUser allocateUser(const string &username, const string &password);
-AdrPlaylist allocatePlaylist(const string &name);
-AdrSong allocateSong(const string &title, const string &artist, const string &album, int duration);
+AdrUser allocateUser(string username, string password);
+AdrPlaylist allocatePlaylist(string name);
+AdrSong allocateSong(string title, string artist, string album, int duration);
 
 // INSERT
 void insertLastUser(ListUser &L, AdrUser P);
@@ -70,36 +69,39 @@ void insertLastSong(AdrSong &first, AdrSong P);
 void insertLastGlobalSong(ListGlobalSong &L, AdrSong P);
 
 // LOGIN
-AdrUser loginUser(const ListUser &L, const string &username, const string &password);
-bool usernameExists(const ListUser &L, const string &username);
+AdrUser loginUser(ListUser &L, string username, string password);
+bool usernameExists(ListUser &L, string username);
 
 // SEARCH
-AdrUser searchUser(const ListUser &L, const string &username);
-AdrPlaylist searchPlaylist(AdrUser U, const string &playlistName);
-AdrSong searchSong(AdrSong first, const string &title);
-AdrSong searchSongInGlobal(const ListGlobalSong &L, const string &title);
+AdrUser searchUser(ListUser &L, string username);
+AdrPlaylist searchPlaylist(AdrUser U, string playlistName);
+AdrSong searchSong(AdrSong first, string title);
+AdrSong searchSongInGlobal(ListGlobalSong &L, string title);
 
-// DTELETE
-void deleteUser(ListUser &L, const string &username);
-void deletePlaylist(AdrUser U, const string &playlistName);
-void deleteSongFromGlobal(ListGlobalSong &L, const string &title);
-void removeSongFromPlaylist(AdrPlaylist P, const string &songTitle);
+// DELETE
+void deleteUser(ListUser &L, string username);
+void deletePlaylist(AdrUser U, string playlistName);
+void deleteSongFromGlobal(ListGlobalSong &L, string title);
+void removeSongFromPlaylist(AdrPlaylist P, string songTitle);
 
-// ADD SONG
-void addSongToPlaylistFromGlobal(AdrPlaylist P, AdrSong GlobalSong);
+// PLAYLIST
+void addSongToPlaylistFromGlobal(AdrPlaylist P, AdrSong G);
 
 // EDIT
-void editSong(AdrSong P, const Song &newData);
-void editPlaylistName(AdrPlaylist P, const string &newName);
+void editSong(AdrSong P, Song newData);
+void editPlaylistName(AdrPlaylist P, string newName);
 
 // SHOW
 void showSongs(AdrSong first);
 void showPlaylists(AdrUser U);
-void showSongsInPlaylist(AdrPlaylist P);
 void playPlaylist(AdrPlaylist P);
 
 // HELPER
-int mmssToSeconds(const string &mmss);
-string secondsToMMSS(int seconds);
+int mmssToSeconds(string mmss);
+string secondsToMMSS(int sec);
+
+// QUEUE SONG
+void enqueuePlaySong(AdrSong &front, AdrSong &rear, AdrSong S);
+void playNextFromQueue(AdrSong &front);
 
 #endif

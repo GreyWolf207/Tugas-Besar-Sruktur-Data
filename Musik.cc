@@ -1,9 +1,7 @@
 #include "Musik.h"
-#include <iostream>
-
 using namespace std;
 
-//CREATE LIST
+// CREATE
 void createListUser(ListUser &L) {
     L.first = nullptr;
 }
@@ -13,7 +11,7 @@ void createListGlobalSong(ListGlobalSong &L) {
 }
 
 // ALLOCATE
-AdrUser allocateUser(const string &username, const string &password) {
+AdrUser allocateUser(string username, string password) {
     AdrUser P = new ElmUser;
 
     P->info.username = username;
@@ -24,7 +22,7 @@ AdrUser allocateUser(const string &username, const string &password) {
     return P;
 }
 
-AdrPlaylist allocatePlaylist(const string &name) {
+AdrPlaylist allocatePlaylist(string name) {
     AdrPlaylist P = new ElmPlaylist;
 
     P->info.name = name;
@@ -34,7 +32,7 @@ AdrPlaylist allocatePlaylist(const string &name) {
     return P;
 }
 
-AdrSong allocateSong(const string &title, const string &artist, const string &album, int duration) {
+AdrSong allocateSong(string title, string artist, string album, int duration) {
     AdrSong P = new ElmSong;
 
     P->info.title = title;
@@ -48,7 +46,7 @@ AdrSong allocateSong(const string &title, const string &artist, const string &al
 
 // INSERT
 void insertLastUser(ListUser &L, AdrUser P) {
-    if (L.first == nullptr) {
+    if (!L.first) {
         L.first = P;
     } else {
         AdrUser Q = L.first;
@@ -62,7 +60,7 @@ void insertLastUser(ListUser &L, AdrUser P) {
 }
 
 void insertLastPlaylist(AdrUser U, AdrPlaylist P) {
-    if (U->firstPlaylist == nullptr) {
+    if (!U->firstPlaylist) {
         U->firstPlaylist = P;
     } else {
         AdrPlaylist Q = U->firstPlaylist;
@@ -76,7 +74,7 @@ void insertLastPlaylist(AdrUser U, AdrPlaylist P) {
 }
 
 void insertLastSong(AdrSong &first, AdrSong P) {
-    if (first == nullptr) {
+    if (!first) {
         first = P;
     } else {
         AdrSong Q = first;
@@ -94,7 +92,7 @@ void insertLastGlobalSong(ListGlobalSong &L, AdrSong P) {
 }
 
 // LOGIN
-AdrUser loginUser(const ListUser &L, const string &username, const string &password) {
+AdrUser loginUser(ListUser &L, string username, string password) {
     AdrUser P = L.first;
 
     while (P) {
@@ -108,12 +106,12 @@ AdrUser loginUser(const ListUser &L, const string &username, const string &passw
     return nullptr;
 }
 
-bool usernameExists(const ListUser &L, const string &username) {
-    return (searchUser(L, username) != nullptr);
+bool usernameExists(ListUser &L, string username) {
+    return searchUser(L, username) != nullptr;
 }
 
 // SEARCH
-AdrUser searchUser(const ListUser &L, const string &username) {
+AdrUser searchUser(ListUser &L, string username) {
     AdrUser P = L.first;
 
     while (P) {
@@ -127,7 +125,7 @@ AdrUser searchUser(const ListUser &L, const string &username) {
     return nullptr;
 }
 
-AdrPlaylist searchPlaylist(AdrUser U, const string &playlistName) {
+AdrPlaylist searchPlaylist(AdrUser U, string playlistName) {
     AdrPlaylist P = U->firstPlaylist;
 
     while (P) {
@@ -141,49 +139,48 @@ AdrPlaylist searchPlaylist(AdrUser U, const string &playlistName) {
     return nullptr;
 }
 
-AdrSong searchSong(AdrSong first, const string &title) {
-    AdrSong P = first;
-
-    while (P) {
-        if (P->info.title == title) {
-            return P;
+AdrSong searchSong(AdrSong first, string title) {
+    while (first) {
+        if (first->info.title == title) {
+            return first;
         }
 
-        P = P->next;
+        first = first->next;
     }
 
     return nullptr;
 }
 
-AdrSong searchSongInGlobal(const ListGlobalSong &L, const string &title) {
+AdrSong searchSongInGlobal(ListGlobalSong &L, string title) {
     return searchSong(L.first, title);
 }
 
 // DELETE
-void deleteUser(ListUser &L, const string &username) {
-    AdrUser P = L.first, Prev = nullptr;
+void deleteUser(ListUser &L, string username) {
+    AdrUser P = L.first, prev = nullptr;
 
     while (P && P->info.username != username) {
-        Prev = P;
+        prev = P;
         P = P->next;
+
     }
 
     if (!P) {
         return;
     }
 
-    if (Prev == nullptr) {
+    if (!prev) {
         L.first = P->next;
     } else {
-        Prev->next = P->next;
+        prev->next = P->next;
     }
 }
 
-void deletePlaylist(AdrUser U, const string &playlistName) {
-    AdrPlaylist P = U->firstPlaylist, Prev = nullptr;
+void deletePlaylist(AdrUser U, string playlistName) {
+    AdrPlaylist P = U->firstPlaylist, prev = nullptr;
 
     while (P && P->info.name != playlistName) {
-        Prev = P;
+        prev = P;
         P = P->next;
     }
 
@@ -191,18 +188,18 @@ void deletePlaylist(AdrUser U, const string &playlistName) {
         return;
     }
 
-    if (Prev == nullptr) {
+    if (!prev) {
         U->firstPlaylist = P->next;
     } else {
-        Prev->next = P->next;
+        prev->next = P->next;
     }
 }
 
-void deleteSongFromGlobal(ListGlobalSong &L, const string &title) {
-    AdrSong P = L.first, Prev = nullptr;
+void deleteSongFromGlobal(ListGlobalSong &L, string title) {
+    AdrSong P = L.first, prev = nullptr;
 
     while (P && P->info.title != title) {
-        Prev = P;
+        prev = P;
         P = P->next;
     }
 
@@ -210,18 +207,18 @@ void deleteSongFromGlobal(ListGlobalSong &L, const string &title) {
         return;
     }
 
-    if (Prev == nullptr) {
+    if (!prev) {
         L.first = P->next;
     } else {
-        Prev->next = P->next;
+        prev->next = P->next;
     }
 }
 
-void removeSongFromPlaylist(AdrPlaylist PL, const string &songTitle) {
-    AdrSong S = PL->firstSong, Prev = nullptr;
+void removeSongFromPlaylist(AdrPlaylist P, string songTitle) {
+    AdrSong S = P->firstSong, prev = nullptr;
 
     while (S && S->info.title != songTitle) {
-        Prev = S;
+        prev = S;
         S = S->next;
     }
 
@@ -229,27 +226,27 @@ void removeSongFromPlaylist(AdrPlaylist PL, const string &songTitle) {
         return;
     }
 
-    if (Prev == nullptr) {
-        PL->firstSong = S->next;
+    if (!prev) {
+        P->firstSong = S->next;
     } else {
-        Prev->next = S->next;
+        prev->next = S->next;
     }
 }
 
-// ADD
+// PLAYLIST
 void addSongToPlaylistFromGlobal(AdrPlaylist P, AdrSong G) {
-    AdrSong copy = allocateSong(G->info.title, G->info.artist, G->info.album, G->info.duration);
-    insertLastSong(P->firstSong, copy);
+    AdrSong S = allocateSong( G->info.title, G->info.artist, G->info.album, G->info.duration);
+    insertLastSong(P->firstSong, S);
 }
 
 // EDIT
-void editSong(AdrSong P, const Song &newData) {
+void editSong(AdrSong P, Song newData) {
     if (P) {
         P->info = newData;
     }
 }
 
-void editPlaylistName(AdrPlaylist P, const string &newName) {
+void editPlaylistName(AdrPlaylist P, string newName) {
     if (P) {
         P->info.name = newName;
     }
@@ -269,30 +266,69 @@ void showPlaylists(AdrUser U) {
     AdrPlaylist P = U->firstPlaylist;
 
     while (P) {
-        cout << "- " << P->info.name << "\n";
+        cout << "- " << P->info.name << endl;
         P = P->next;
     }
 }
 
-void showSongsInPlaylist(AdrPlaylist P) {
-    showSongs(P->firstSong);
-}
-
 void playPlaylist(AdrPlaylist P) {
-    cout << "\n=== PLAYLIST : " << P->info.name << " ===\n";
+    cout << "PLAYLIST: " << P->info.name << endl;
     showSongs(P->firstSong);
 }
 
 // HELPER
-int mmssToSeconds(const string &mmss) {
-    int pos = mmss.find(':');
-    int m = stoi(mmss.substr(0, pos));
-    int s = stoi(mmss.substr(pos + 1));
+int mmssToSeconds(string mmss) {
+    int m = 0, s = 0, i = 0;
+
+    while (mmss[i] != ':') {
+        m = m * 10 + (mmss[i] - '0');
+        i++;
+    }
+
+    i++;
+
+    while (mmss[i] != '\0') {
+        s = s * 10 + (mmss[i] - '0');
+        i++;
+    }
 
     return m * 60 + s;
 }
 
 string secondsToMMSS(int sec) {
-    int m = sec / 60, s = sec % 60;
+    int m = sec / 60;
+    int s = sec % 60;
     return to_string(m) + ":" + (s < 10 ? "0" : "") + to_string(s);
+}
+
+// QUEUE SONG
+void enqueuePlaySong(AdrSong &front, AdrSong &rear, AdrSong S) {
+    if (!S) {
+        cout << "Lagu tidak ditemukan.\n";
+        return;
+    }
+
+    AdrSong Q = allocateSong(S->info.title, S->info.artist, S->info.album, S->info.duration);
+
+    if (!front) {
+        front = rear = Q;
+    } else {
+        rear->next = Q;
+        rear = Q;
+    }
+
+    cout << "Lagu masuk ke queue.\n";
+}
+
+void playNextFromQueue(AdrSong &front) {
+    if (!front) {
+        cout << "Queue kosong.\n";
+        return;
+    }
+
+    cout << "Now Playing: " << front->info.title << " - " << front->info.artist << endl;
+
+    AdrSong temp = front;
+    front = front->next;
+    temp = nullptr;
 }
