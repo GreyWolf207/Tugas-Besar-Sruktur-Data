@@ -16,7 +16,7 @@ int main() {
     while (run) {
         string pilih;
 
-        cout << "\n===== AMBATUSING =====\n";
+        cout << "\n===== ADA MUSIK =====\n";
         cout << "1. Login\n2. Create User\n3. Delete User\n4. Exit\nPilih: ";
         cin >> pilih;
 
